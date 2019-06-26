@@ -9,7 +9,7 @@ train_workers: 8
 eval_workers: 4
 height: 512
 width: 512
-lr: 0.01
+lr: 0.00005
 lr_mode: step
 lr_decay: 0.1
 wd: 0.00001
