@@ -1,0 +1,9 @@
+digraph plot {
+	data [label=data fillcolor="#8dd3c7" fixedsize=true height=0.8034 shape=oval style=filled width=1.3]
+	fc1 [label="FullyConnected
+10" fillcolor="#fb8072" fixedsize=true height=0.8034 shape=box style=filled width=1.3]
+	composed [label="FullyConnected
+10" fillcolor="#fb8072" fixedsize=true height=0.8034 shape=box style=filled width=1.3]
+	fc1 -> data [label="" arrowtail=open dir=back]
+	composed -> fc1 [label="" arrowtail=open dir=back]
+}
