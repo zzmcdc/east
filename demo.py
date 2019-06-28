@@ -58,6 +58,7 @@ if __name__ == '__main__':
     h_ration = args.data_shape/h
     img_input = mx.nd.expand_dims(img_input, 0)
     img_input = img_input.as_in_context(mx.gpu(0))
+    #img_input = mx.nd.cast(img_input)
 
     score_map_thresh = args.score_map_threshold
     box_thresh = args.box_threshold

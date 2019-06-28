@@ -5475,7 +5475,7 @@
       "op": "null", 
       "name": "east0_P5_conv_lat_weight", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7fe048fe8748>", 
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
         "kernel": "(1, 1)", 
         "no_bias": "False", 
         "num_filter": "128", 
@@ -5488,7 +5488,7 @@
       "op": "null", 
       "name": "east0_P5_conv_lat_bias", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7fe048fe8748>", 
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
         "kernel": "(1, 1)", 
         "no_bias": "False", 
         "num_filter": "128", 
@@ -5501,7 +5501,7 @@
       "op": "Convolution", 
       "name": "east0_P5_conv_lat", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7fe048fe8748>", 
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
         "kernel": "(1, 1)", 
         "no_bias": "False", 
         "num_filter": "128", 
@@ -5538,7 +5538,7 @@
       "op": "null", 
       "name": "east0_P4_conv_lat_weight", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7fe048fe8748>", 
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
         "kernel": "(1, 1)", 
         "no_bias": "False", 
         "num_filter": "128", 
@@ -5551,7 +5551,7 @@
       "op": "null", 
       "name": "east0_P4_conv_lat_bias", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7fe048fe8748>", 
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
         "kernel": "(1, 1)", 
         "no_bias": "False", 
         "num_filter": "128", 
@@ -5564,7 +5564,7 @@
       "op": "Convolution", 
       "name": "east0_P4_conv_lat", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7fe048fe8748>", 
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
         "kernel": "(1, 1)", 
         "no_bias": "False", 
         "num_filter": "128", 
@@ -5610,7 +5610,7 @@
       "op": "null", 
       "name": "east0_P3_conv_lat_weight", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7fe048fe8748>", 
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
         "kernel": "(1, 1)", 
         "no_bias": "False", 
         "num_filter": "128", 
@@ -5623,7 +5623,7 @@
       "op": "null", 
       "name": "east0_P3_conv_lat_bias", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7fe048fe8748>", 
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
         "kernel": "(1, 1)", 
         "no_bias": "False", 
         "num_filter": "128", 
@@ -5636,7 +5636,7 @@
       "op": "Convolution", 
       "name": "east0_P3_conv_lat", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7fe048fe8748>", 
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
         "kernel": "(1, 1)", 
         "no_bias": "False", 
         "num_filter": "128", 
@@ -5682,7 +5682,7 @@
       "op": "null", 
       "name": "east0_P2_conv_lat_weight", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7fe048fe8748>", 
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
         "kernel": "(1, 1)", 
         "no_bias": "False", 
         "num_filter": "128", 
@@ -5695,7 +5695,7 @@
       "op": "null", 
       "name": "east0_P2_conv_lat_bias", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7fe048fe8748>", 
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
         "kernel": "(1, 1)", 
         "no_bias": "False", 
         "num_filter": "128", 
@@ -5708,7 +5708,7 @@
       "op": "Convolution", 
       "name": "east0_P2_conv_lat", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7fe048fe8748>", 
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
         "kernel": "(1, 1)", 
         "no_bias": "False", 
         "num_filter": "128", 
@@ -5730,7 +5730,7 @@
       "op": "null", 
       "name": "east0_P2_conv1_weight", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7fe048fe8748>", 
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
         "kernel": "(3, 3)", 
         "no_bias": "False", 
         "num_filter": "128", 
@@ -5743,7 +5743,7 @@
       "op": "null", 
       "name": "east0_P2_conv1_bias", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7fe048fe8748>", 
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
         "kernel": "(3, 3)", 
         "no_bias": "False", 
         "num_filter": "128", 
@@ -5756,7 +5756,7 @@
       "op": "Convolution", 
       "name": "east0_P2_conv1", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7fe048fe8748>", 
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
         "kernel": "(3, 3)", 
         "no_bias": "False", 
         "num_filter": "128", 

@@ -5,7 +5,6 @@ from mxnet.gluon import nn
 import numpy as np
 from feature import FPNFeatureExpander
 from mxnet import autograd
-from mxboard import SummaryWriter
 
 
 class East(nn.HybridBlock):
@@ -15,18 +14,14 @@ class East(nn.HybridBlock):
     self.text_scale = text_scale
     weight_init = mx.init.Xavier(rnd_type='gaussian', factor_type='out', magnitude=2.)
     with self.name_scope():
-      self.features = FPNFeatureExpander(network=base_model, outputs=outputs, num_filters=[128, 128, 128, 128],
-                                         use_1x1=True, use_concat=True, use_p6=False, no_bias=False,
-                                         pretrained=pretrained_base, ctx=ctx, **kwargs)
+      self.features = FPNFeatureExpander(network=base_model, outputs=outputs,pretrained=pretrained_base, ctx=ctx, **kwargs)
 
       self.score_branch = nn.Conv2D(1, 1, activation='sigmoid')
       self.geo_branch = nn.Conv2D(4, 1, activation='sigmoid')
       self.theta_branch = nn.Conv2D(1, 1, activation='sigmoid')
 
   def hybrid_forward(self, F, x, **kwargs):
-    x = F.Cast(x, dtype='float16')
     x = self.features(x)
-    x = F.Cast(x, dtype='float32')
     score_map = self.score_branch(x)
     geo_map = self.geo_branch(x) * self.text_scale
 
@@ -70,8 +65,5 @@ if __name__ == '__main__':
   net = get_model('resnet50', pretrained_base=True)
   net.hybridize()
   net.initialize()
-  with autograd.train_mode():
-    x = mx.nd.array([np.random.normal(size=(3, 512, 512))])
-    net(mx.nd.random.uniform(low=0, high=1, shape=(1, 3, 512, 512)))
-    with SummaryWriter(logdir='./logs') as sw:
-      sw.add_graph(net)
+  sym = mx.sym.Group(net(mx.sym.var('data')))
+  mx.viz.plot_network(symbol=sym,shape={'data':(1,3,512,512)}).view()

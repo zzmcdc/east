@@ -85,11 +85,11 @@ def train(net, train_data, val_data, ctx, args):
                      iters_per_epoch=num_batches,
                      step_epoch=lr_decay_epoch, step_factor=args['lr_decay'], power=2), ])
 
-    trainer = gluon.Trainer(net.collect_params(), 'sgd',
-                            {'wd': args['wd'], 'momentum': args['momentum'], 'lr_scheduler': lr_scheduler, 'multi_precision': True},
-                            kvstore='local')
-    #trainer = gluon.Trainer(net.collect_params(), 'adam', {
-    #                      'learning_rate': args['lr'], 'multi_precision': True})
+    #trainer = gluon.Trainer(net.collect_params(), 'sgd',
+    #                        {'wd': args['wd'], 'momentum': args['momentum'], 'lr_scheduler': lr_scheduler, 'multi_precision': True},
+    #                        kvstore='local')
+    trainer = gluon.Trainer(net.collect_params(), 'adam', {
+                          'learning_rate': args['lr'], 'multi_precision': True})
     east_loss = EastLoss()
     sum_losses = mx.metric.Loss('sum_loss')
     cls_losses = mx.metric.Loss('cls_loss')
@@ -113,7 +113,7 @@ def train(net, train_data, val_data, ctx, args):
         tic = time.time()
         btic = time.time()
         mx.nd.waitall()
-        net.hybridize()
+        # net.hybridize()
 
         for i in range(args['num_sample'] // args['batch_size']):
             batch = next(train_data)
@@ -218,8 +218,7 @@ if __name__ == '__main__':
     ctx = ctx if ctx else [mx.cpu()]
     net_name = '_'.join(('east', str(args['data_shape']), args['network']))
     args['save_prefix'] += net_name
-    net = get_model(args['network'], text_scale=args['data_shape'],
-                    use_upsample=False, use_deconv=True)
+    net = get_model(args['network'], text_scale=args['data_shape'])
     async_net = net
     if args['resume']:
         net.load_parameters(args['resume'])
@@ -231,10 +230,8 @@ if __name__ == '__main__':
             async_net.initialize()
 
     for item in net.features.collect_params().items():
-        if item[0].split('_')[-1] not in ['gamma', 'beta', 'mean', 'var']:
-            item[1].cast('float16')
-
-    
+        if 'mobilenet' in item[0].split('_')[1]:
+            item[1].lr_mult = 0.1
     train_loader = get_batch(
         num_workers=args['train_workers'], batch_size=args['batch_size'], data_flag='train', param=args)
     val_loader = get_batch(

@@ -68,92 +68,6 @@ def _parse_network(network, outputs, inputs, pretrained, ctx, **kwargs):
     return inputs, outputs, params
 
 
-class FeatureExtractor(SymbolBlock):
-    """Feature extractor.
-
-    Parameters
-    ----------
-    network : str or HybridBlock or Symbol
-        Logic chain: load from gluoncv.model_zoo if network is string.
-        Convert to Symbol if network is HybridBlock
-    outputs : str or list of str
-        The name of layers to be extracted as features
-    inputs : list of str or list of Symbol
-        The inputs of network.
-    pretrained : bool
-        Use pretrained parameters as in gluon.model_zoo
-    ctx : Context
-        The context, e.g. mxnet.cpu(), mxnet.gpu(0).
-    """
-
-    def __init__(self, network, outputs, inputs=('data',),
-                 pretrained=False, ctx=mx.cpu(), **kwargs):
-        inputs, outputs, params = _parse_network(
-            network, outputs, inputs, pretrained, ctx, **kwargs)
-        super(FeatureExtractor, self).__init__(outputs, inputs, params=params)
-
-
-class FeatureExpander(SymbolBlock):
-    """Feature extractor with additional layers to append.
-    This is very common in vision networks where extra branches are attached to
-    backbone network.
-
-    Parameters
-    ----------
-    network : str or HybridBlock or Symbol
-        Logic chain: load from gluoncv.model_zoo if network is string.
-        Convert to Symbol if network is HybridBlock.
-    outputs : str or list of str
-        The name of layers to be extracted as features
-    num_filters : list of int
-        Number of filters to be appended.
-    use_1x1_transition : bool
-        Whether to use 1x1 convolution between attached layers. It is effective
-        reducing network size.
-    use_bn : bool
-        Whether to use BatchNorm between attached layers.
-    reduce_ratio : float
-        Channel reduction ratio of the transition layers.
-    min_depth : int
-        Minimum channel number of transition layers.
-    global_pool : bool
-        Whether to use global pooling as the last layer.
-    pretrained : bool
-        Use pretrained parameters as in gluon.model_zoo if `True`.
-    ctx : Context
-        The context, e.g. mxnet.cpu(), mxnet.gpu(0).
-    inputs : list of str
-        Name of input variables to the network.
-
-    """
-
-    def __init__(self, network, outputs, num_filters, use_1x1_transition=True,
-                 use_bn=True, reduce_ratio=1.0, min_depth=128, global_pool=False,
-                 pretrained=False, ctx=mx.cpu(), inputs=('data',), **kwargs):
-        inputs, outputs, params = _parse_network(
-            network, outputs, inputs, pretrained, ctx, **kwargs)
-        # append more layers
-        y = outputs[-1]
-        weight_init = mx.init.Xavier(rnd_type='gaussian', factor_type='out', magnitude=2)
-        for i, f in enumerate(num_filters):
-            if use_1x1_transition:
-                num_trans = max(min_depth, int(round(f * reduce_ratio)))
-                y = mx.sym.Convolution(
-                    y, num_filter=num_trans, kernel=(1, 1), no_bias=use_bn,
-                    name='expand_trans_conv{}'.format(i), attr={'__init__': weight_init})
-                if use_bn:
-                    y = mx.sym.BatchNorm(y, name='expand_trans_bn{}'.format(i))
-                y = mx.sym.Activation(y, act_type='relu', name='expand_trans_relu{}'.format(i))
-            y = mx.sym.Convolution(
-                y, num_filter=f, kernel=(3, 3), pad=(1, 1), stride=(2, 2),
-                no_bias=use_bn, name='expand_conv{}'.format(i), attr={'__init__': weight_init})
-            if use_bn:
-                y = mx.sym.BatchNorm(y, name='expand_bn{}'.format(i))
-            y = mx.sym.Activation(y, act_type='relu', name='expand_reu{}'.format(i))
-            outputs.append(y)
-        if global_pool:
-            outputs.append(mx.sym.Pooling(y, pool_type='avg', global_pool=True, kernel=(1, 1)))
-        super(FeatureExpander, self).__init__(outputs, inputs, params)
 
 
 class FPNFeatureExpander(SymbolBlock):
@@ -193,90 +107,38 @@ class FPNFeatureExpander(SymbolBlock):
 
     """
 
-    def __init__(self, network, outputs, num_filters, use_1x1=True, use_upsample=True, use_deconv=False,
-                 use_concat=True, use_p6=False, no_bias=True, pretrained=False, norm_layer=None,
-                 norm_kwargs=None, ctx=mx.cpu(),
+    def __init__(self, network, outputs,pretrained=True, ctx=mx.cpu(),
                  inputs=('data',)):
-        inputs, outputs, params = _parse_network(network, outputs, inputs, pretrained, ctx)
-        if norm_kwargs is None:
-            norm_kwargs = {}
+        inputs, f, params = _parse_network(network, outputs, inputs, pretrained, ctx)
+        self.bn_eps = 1e-5  
+        self.bn_mom = 0.997
+        weight_init = mx.init.Xavier(rnd_type='gaussian', factor_type='out', magnitude=2.)
+
         # e.g. For ResNet50, the feature is :
         # outputs = ['stage1_activation2', 'stage2_activation3',
         #            'stage3_activation5', 'stage4_activation2']
         # with regard to [conv2, conv3, conv4, conv5] -> [C2, C3, C4, C5]
         # append more layers with reversed order : [P5, P4, P3, P2]
-        y = outputs[-1]
-        base_features = outputs[::-1]
-        num_stages = len(num_filters) + 1  # usually 5
-        weight_init = mx.init.Xavier(rnd_type='gaussian', factor_type='out', magnitude=2.)
-        tmp_outputs = []
-        # num_filter is 256 in ori paper
-        for i, (bf, f) in enumerate(zip(base_features, num_filters)):
+        f.reverse()
+        umsample_size = [2048, 128, 64]
+        num_outputs = [None, 128, 64, 32]
+        g = [None, None, None, None]
+        h = [None, None, None, None] 
+        for i in range(4):
             if i == 0:
-                if use_1x1:
-                    y = mx.sym.Convolution(y, num_filter=f, kernel=(1, 1), pad=(0, 0),
-                                           stride=(1, 1), no_bias=no_bias,
-                                           name="P{}_conv_lat".format(num_stages - i),
-                                           attr={'__init__': weight_init})
-                    if norm_layer is not None:
-                        if norm_layer is SyncBatchNorm:
-                            norm_kwargs['key'] = "P{}_lat_bn".format(num_stages - i)
-                            norm_kwargs['name'] = "P{}_lat_bn".format(num_stages - i)
-                        y = norm_layer(y, **norm_kwargs)
-                if use_p6:
-                    # method 1 : use max pool (Detectron use this)
-                    # y_p6 = mx.sym.Pooling(y, pool_type='max', kernel=(1, 1), pad=(0, 0),
-                    #                       stride=(2, 2), name="P{}_pre".format(num_stages+1))
-                    # method 2 : use conv (Deformable use this)
-                    y_p6 = mx.sym.Convolution(y, num_filter=f, kernel=(3, 3), pad=(1, 1),
-                                              stride=(2, 2), no_bias=no_bias,
-                                              name='P{}_conv1'.format(num_stages + 1),
-                                              attr={'__init__': weight_init})
-                    if norm_layer is not None:
-                        if norm_layer is SyncBatchNorm:
-                            norm_kwargs['key'] = "P{}_pre_bn".format(num_stages + 1)
-                            norm_kwargs['name'] = "P{}_pre_bn".format(num_stages + 1)
-                        y_p6 = norm_layer(y_p6, **norm_kwargs)
+                h[i] = f[i]
             else:
-                if use_1x1:
-                    bf = mx.sym.Convolution(bf, num_filter=f, kernel=(1, 1), pad=(0, 0),
-                                            stride=(1, 1), no_bias=no_bias,
-                                            name="P{}_conv_lat".format(num_stages - i),
-                                            attr={'__init__': weight_init})
-                    if norm_layer is not None:
-                        if norm_layer is SyncBatchNorm:
-                            norm_kwargs['key'] = "P{}_conv1_bn".format(num_stages - i)
-                            norm_kwargs['name'] = "P{}_conv1_bn".format(num_stages - i)
-                        bf = norm_layer(bf, **norm_kwargs)
-                if use_upsample:
-                    y = mx.sym.UpSampling(y, scale=2, sample_type='nearest',
-                                          name="P{}_upsp".format(num_stages - i))
-                if use_deconv:
-                    y = mx.sym.Deconvolution(data=y,kernel=(3,3),stride=(2,2),pad=(1,1),adj=(1,1),num_filter=f,
-                                             name="P{}_deconv".format(num_stages - i))
-
-                if use_concat:
-                    # make two symbol alignment
-                    # method 1 : mx.sym.Crop
-                    # y = mx.sym.Crop(*[y, bf], name="P{}_clip".format(num_stages-i))
-                    # method 2 : mx.sym.slice_like
-                    y = mx.sym.concat(y,bf, dim=1,name="P{}_concat".format(num_stages - i))
-                    # y = mx.sym.slice_like(y, bf * 0, axes=(2, 3),
-                    #                       name="P{}_clip".format(num_stages - i))
-                    # y = mx.sym.ElementWiseSum(bf, y, name="P{}_sum".format(num_stages - i))
-            # Reduce the aliasing effect of upsampling described in ori paper
-            out = mx.sym.Convolution(y, num_filter=f, kernel=(3, 3), pad=(1, 1), stride=(1, 1),
-                                     no_bias=no_bias, name='P{}_conv1'.format(num_stages - i),
-                                     attr={'__init__': weight_init})
-            if norm_layer is not None:
-                if norm_layer is SyncBatchNorm:
-                    norm_kwargs['key'] = "P{}_bn".format(num_stages - i)
-                    norm_kwargs['name'] = "P{}_bn".format(num_stages - i)
-                out = norm_layer(out, **norm_kwargs)
-            tmp_outputs.append(out)
-        if use_p6:
-            outputs = tmp_outputs[::-1] + [y_p6]  # [P2, P3, P4, P5] + [P6]
-        else:
-            outputs = tmp_outputs[::-1]  # [P2, P3, P4, P5]
-
-        super(FPNFeatureExpander, self).__init__(outputs[0], inputs, params)
+                cur_data = mx.sym.Concat(*[g[i - 1], f[i]], dim=1)
+                c1_1 = mx.sym.Convolution(data=cur_data, num_filter=num_outputs[i], kernel=(1, 1), no_bias=True, attr={'__init__': weight_init})
+                c1_1 = mx.sym.BatchNorm(data=c1_1, fix_gamma=False, use_global_stats=False, eps=self.bn_eps,momentum=self.bn_mom)
+                
+                c1_1 = mx.sym.Convolution(data=c1_1, num_filter=num_outputs[i], kernel=(3, 3), pad=(1, 1), no_bias=True,attr={'__init__': weight_init}) 
+                h[i] = mx.sym.BatchNorm(data=c1_1, fix_gamma=False, use_global_stats=False, eps=self.bn_eps,momentum=self.bn_mom)
+            if i <= 2:
+                g[i] = mx.sym.Deconvolution(data=h[i],kernel=(3,3),stride=(2,2),pad=(1,1),adj=(1,1),num_filter=umsample_size[i]) 
+   
+            else:
+                g[i] = mx.sym.Convolution(data=h[i], num_filter=num_outputs[i], kernel=(3, 3), pad=(1, 1), no_bias=True, attr={'__init__': weight_init})
+                g[i] = mx.sym.BatchNorm(data=g[i], fix_gamma=False, use_global_stats=False, eps=self.bn_eps, momentum=self.bn_mom)
+            
+        super(FPNFeatureExpander, self).__init__(g[3], inputs, params)
