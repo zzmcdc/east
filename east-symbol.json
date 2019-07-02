@@ -5473,50 +5473,12 @@
     }, 
     {
       "op": "null", 
-      "name": "east0_P5_conv_lat_weight", 
+      "name": "east0_deconvolution0_weight", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
-        "kernel": "(1, 1)", 
-        "no_bias": "False", 
-        "num_filter": "128", 
-        "pad": "(0, 0)", 
-        "stride": "(1, 1)"
-      }, 
-      "inputs": []
-    }, 
-    {
-      "op": "null", 
-      "name": "east0_P5_conv_lat_bias", 
-      "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
-        "kernel": "(1, 1)", 
-        "no_bias": "False", 
-        "num_filter": "128", 
-        "pad": "(0, 0)", 
-        "stride": "(1, 1)"
-      }, 
-      "inputs": []
-    }, 
-    {
-      "op": "Convolution", 
-      "name": "east0_P5_conv_lat", 
-      "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
-        "kernel": "(1, 1)", 
-        "no_bias": "False", 
-        "num_filter": "128", 
-        "pad": "(0, 0)", 
-        "stride": "(1, 1)"
-      }, 
-      "inputs": [[458, 0, 0], [459, 0, 0], [460, 0, 0]]
-    }, 
-    {
-      "op": "null", 
-      "name": "east0_P4_deconv_weight", 
-      "attrs": {
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
         "adj": "(1, 1)", 
         "kernel": "(3, 3)", 
-        "num_filter": "128", 
+        "num_filter": "2048", 
         "pad": "(1, 1)", 
         "stride": "(2, 2)"
       }, 
@@ -5524,68 +5486,191 @@
     }, 
     {
       "op": "Deconvolution", 
-      "name": "east0_P4_deconv", 
+      "name": "east0_deconvolution0", 
       "attrs": {
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
         "adj": "(1, 1)", 
         "kernel": "(3, 3)", 
-        "num_filter": "128", 
+        "num_filter": "2048", 
         "pad": "(1, 1)", 
         "stride": "(2, 2)"
+      }, 
+      "inputs": [[458, 0, 0], [459, 0, 0]]
+    }, 
+    {
+      "op": "Concat", 
+      "name": "east0_concat0", 
+      "attrs": {
+        "dim": "1", 
+        "num_args": "2"
+      }, 
+      "inputs": [[460, 0, 0], [274, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_convolution0_weight", 
+      "attrs": {
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
+        "kernel": "(1, 1)", 
+        "no_bias": "True", 
+        "num_filter": "128"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "Convolution", 
+      "name": "east0_convolution0", 
+      "attrs": {
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
+        "kernel": "(1, 1)", 
+        "no_bias": "True", 
+        "num_filter": "128"
       }, 
       "inputs": [[461, 0, 0], [462, 0, 0]]
     }, 
     {
       "op": "null", 
-      "name": "east0_P4_conv_lat_weight", 
+      "name": "east0_batchnorm0_gamma", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
-        "kernel": "(1, 1)", 
-        "no_bias": "False", 
-        "num_filter": "128", 
-        "pad": "(0, 0)", 
-        "stride": "(1, 1)"
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
       }, 
       "inputs": []
     }, 
     {
       "op": "null", 
-      "name": "east0_P4_conv_lat_bias", 
+      "name": "east0_batchnorm0_beta", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
-        "kernel": "(1, 1)", 
-        "no_bias": "False", 
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm0_moving_mean", 
+      "attrs": {
+        "__init__": "[\"zero\", {}]", 
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm0_moving_var", 
+      "attrs": {
+        "__init__": "[\"one\", {}]", 
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "BatchNorm", 
+      "name": "east0_batchnorm0", 
+      "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": [[463, 0, 0], [464, 0, 0], [465, 0, 0], [466, 0, 1], [467, 0, 1]]
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_convolution1_weight", 
+      "attrs": {
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
+        "kernel": "(3, 3)", 
+        "no_bias": "True", 
         "num_filter": "128", 
-        "pad": "(0, 0)", 
-        "stride": "(1, 1)"
+        "pad": "(1, 1)"
       }, 
       "inputs": []
     }, 
     {
       "op": "Convolution", 
-      "name": "east0_P4_conv_lat", 
+      "name": "east0_convolution1", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
-        "kernel": "(1, 1)", 
-        "no_bias": "False", 
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
+        "kernel": "(3, 3)", 
+        "no_bias": "True", 
         "num_filter": "128", 
-        "pad": "(0, 0)", 
-        "stride": "(1, 1)"
+        "pad": "(1, 1)"
       }, 
-      "inputs": [[375, 0, 0], [464, 0, 0], [465, 0, 0]]
-    }, 
-    {
-      "op": "Concat", 
-      "name": "east0_P4_concat", 
-      "attrs": {
-        "dim": "1", 
-        "num_args": "2"
-      }, 
-      "inputs": [[463, 0, 0], [466, 0, 0]]
+      "inputs": [[468, 0, 0], [469, 0, 0]]
     }, 
     {
       "op": "null", 
-      "name": "east0_P3_deconv_weight", 
+      "name": "east0_batchnorm1_gamma", 
       "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm1_beta", 
+      "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm1_moving_mean", 
+      "attrs": {
+        "__init__": "[\"zero\", {}]", 
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm1_moving_var", 
+      "attrs": {
+        "__init__": "[\"one\", {}]", 
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "BatchNorm", 
+      "name": "east0_batchnorm1", 
+      "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": [[470, 0, 0], [471, 0, 0], [472, 0, 0], [473, 0, 1], [474, 0, 1]]
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_deconvolution1_weight", 
+      "attrs": {
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
         "adj": "(1, 1)", 
         "kernel": "(3, 3)", 
         "num_filter": "128", 
@@ -5596,71 +5681,194 @@
     }, 
     {
       "op": "Deconvolution", 
-      "name": "east0_P3_deconv", 
+      "name": "east0_deconvolution1", 
       "attrs": {
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
         "adj": "(1, 1)", 
         "kernel": "(3, 3)", 
         "num_filter": "128", 
         "pad": "(1, 1)", 
         "stride": "(2, 2)"
       }, 
-      "inputs": [[467, 0, 0], [468, 0, 0]]
+      "inputs": [[475, 0, 0], [476, 0, 0]]
     }, 
     {
-      "op": "null", 
-      "name": "east0_P3_conv_lat_weight", 
+      "op": "Concat", 
+      "name": "east0_concat1", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
-        "kernel": "(1, 1)", 
-        "no_bias": "False", 
-        "num_filter": "128", 
-        "pad": "(0, 0)", 
-        "stride": "(1, 1)"
+        "dim": "1", 
+        "num_args": "2"
       }, 
-      "inputs": []
+      "inputs": [[477, 0, 0], [141, 0, 0]]
     }, 
     {
       "op": "null", 
-      "name": "east0_P3_conv_lat_bias", 
+      "name": "east0_convolution2_weight", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
         "kernel": "(1, 1)", 
-        "no_bias": "False", 
-        "num_filter": "128", 
-        "pad": "(0, 0)", 
-        "stride": "(1, 1)"
+        "no_bias": "True", 
+        "num_filter": "64"
       }, 
       "inputs": []
     }, 
     {
       "op": "Convolution", 
-      "name": "east0_P3_conv_lat", 
+      "name": "east0_convolution2", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
         "kernel": "(1, 1)", 
-        "no_bias": "False", 
-        "num_filter": "128", 
-        "pad": "(0, 0)", 
-        "stride": "(1, 1)"
+        "no_bias": "True", 
+        "num_filter": "64"
       }, 
-      "inputs": [[217, 0, 0], [470, 0, 0], [471, 0, 0]]
-    }, 
-    {
-      "op": "Concat", 
-      "name": "east0_P3_concat", 
-      "attrs": {
-        "dim": "1", 
-        "num_args": "2"
-      }, 
-      "inputs": [[469, 0, 0], [472, 0, 0]]
+      "inputs": [[478, 0, 0], [479, 0, 0]]
     }, 
     {
       "op": "null", 
-      "name": "east0_P2_deconv_weight", 
+      "name": "east0_batchnorm2_gamma", 
       "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm2_beta", 
+      "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm2_moving_mean", 
+      "attrs": {
+        "__init__": "[\"zero\", {}]", 
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm2_moving_var", 
+      "attrs": {
+        "__init__": "[\"one\", {}]", 
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "BatchNorm", 
+      "name": "east0_batchnorm2", 
+      "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": [[480, 0, 0], [481, 0, 0], [482, 0, 0], [483, 0, 1], [484, 0, 1]]
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_convolution3_weight", 
+      "attrs": {
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
+        "kernel": "(3, 3)", 
+        "no_bias": "True", 
+        "num_filter": "64", 
+        "pad": "(1, 1)"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "Convolution", 
+      "name": "east0_convolution3", 
+      "attrs": {
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
+        "kernel": "(3, 3)", 
+        "no_bias": "True", 
+        "num_filter": "64", 
+        "pad": "(1, 1)"
+      }, 
+      "inputs": [[485, 0, 0], [486, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm3_gamma", 
+      "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm3_beta", 
+      "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm3_moving_mean", 
+      "attrs": {
+        "__init__": "[\"zero\", {}]", 
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm3_moving_var", 
+      "attrs": {
+        "__init__": "[\"one\", {}]", 
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "BatchNorm", 
+      "name": "east0_batchnorm3", 
+      "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": [[487, 0, 0], [488, 0, 0], [489, 0, 0], [490, 0, 1], [491, 0, 1]]
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_deconvolution2_weight", 
+      "attrs": {
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
         "adj": "(1, 1)", 
         "kernel": "(3, 3)", 
-        "num_filter": "128", 
+        "num_filter": "64", 
         "pad": "(1, 1)", 
         "stride": "(2, 2)"
       }, 
@@ -5668,108 +5876,272 @@
     }, 
     {
       "op": "Deconvolution", 
-      "name": "east0_P2_deconv", 
+      "name": "east0_deconvolution2", 
       "attrs": {
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
         "adj": "(1, 1)", 
         "kernel": "(3, 3)", 
-        "num_filter": "128", 
+        "num_filter": "64", 
         "pad": "(1, 1)", 
         "stride": "(2, 2)"
       }, 
-      "inputs": [[473, 0, 0], [474, 0, 0]]
-    }, 
-    {
-      "op": "null", 
-      "name": "east0_P2_conv_lat_weight", 
-      "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
-        "kernel": "(1, 1)", 
-        "no_bias": "False", 
-        "num_filter": "128", 
-        "pad": "(0, 0)", 
-        "stride": "(1, 1)"
-      }, 
-      "inputs": []
-    }, 
-    {
-      "op": "null", 
-      "name": "east0_P2_conv_lat_bias", 
-      "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
-        "kernel": "(1, 1)", 
-        "no_bias": "False", 
-        "num_filter": "128", 
-        "pad": "(0, 0)", 
-        "stride": "(1, 1)"
-      }, 
-      "inputs": []
-    }, 
-    {
-      "op": "Convolution", 
-      "name": "east0_P2_conv_lat", 
-      "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
-        "kernel": "(1, 1)", 
-        "no_bias": "False", 
-        "num_filter": "128", 
-        "pad": "(0, 0)", 
-        "stride": "(1, 1)"
-      }, 
-      "inputs": [[109, 0, 0], [476, 0, 0], [477, 0, 0]]
+      "inputs": [[492, 0, 0], [493, 0, 0]]
     }, 
     {
       "op": "Concat", 
-      "name": "east0_P2_concat", 
+      "name": "east0_concat2", 
       "attrs": {
         "dim": "1", 
         "num_args": "2"
       }, 
-      "inputs": [[475, 0, 0], [478, 0, 0]]
+      "inputs": [[494, 0, 0], [26, 0, 0]]
     }, 
     {
       "op": "null", 
-      "name": "east0_P2_conv1_weight", 
+      "name": "east0_convolution4_weight", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
-        "kernel": "(3, 3)", 
-        "no_bias": "False", 
-        "num_filter": "128", 
-        "pad": "(1, 1)", 
-        "stride": "(1, 1)"
-      }, 
-      "inputs": []
-    }, 
-    {
-      "op": "null", 
-      "name": "east0_P2_conv1_bias", 
-      "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
-        "kernel": "(3, 3)", 
-        "no_bias": "False", 
-        "num_filter": "128", 
-        "pad": "(1, 1)", 
-        "stride": "(1, 1)"
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
+        "kernel": "(1, 1)", 
+        "no_bias": "True", 
+        "num_filter": "32"
       }, 
       "inputs": []
     }, 
     {
       "op": "Convolution", 
-      "name": "east0_P2_conv1", 
+      "name": "east0_convolution4", 
       "attrs": {
-        "__init__": "<mxnet.initializer.Xavier object at 0x7f593f7e2b70>", 
-        "kernel": "(3, 3)", 
-        "no_bias": "False", 
-        "num_filter": "128", 
-        "pad": "(1, 1)", 
-        "stride": "(1, 1)"
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
+        "kernel": "(1, 1)", 
+        "no_bias": "True", 
+        "num_filter": "32"
       }, 
-      "inputs": [[479, 0, 0], [480, 0, 0], [481, 0, 0]]
+      "inputs": [[495, 0, 0], [496, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm4_gamma", 
+      "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm4_beta", 
+      "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm4_moving_mean", 
+      "attrs": {
+        "__init__": "[\"zero\", {}]", 
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm4_moving_var", 
+      "attrs": {
+        "__init__": "[\"one\", {}]", 
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "BatchNorm", 
+      "name": "east0_batchnorm4", 
+      "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": [[497, 0, 0], [498, 0, 0], [499, 0, 0], [500, 0, 1], [501, 0, 1]]
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_convolution5_weight", 
+      "attrs": {
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
+        "kernel": "(3, 3)", 
+        "no_bias": "True", 
+        "num_filter": "32", 
+        "pad": "(1, 1)"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "Convolution", 
+      "name": "east0_convolution5", 
+      "attrs": {
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
+        "kernel": "(3, 3)", 
+        "no_bias": "True", 
+        "num_filter": "32", 
+        "pad": "(1, 1)"
+      }, 
+      "inputs": [[502, 0, 0], [503, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm5_gamma", 
+      "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm5_beta", 
+      "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm5_moving_mean", 
+      "attrs": {
+        "__init__": "[\"zero\", {}]", 
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm5_moving_var", 
+      "attrs": {
+        "__init__": "[\"one\", {}]", 
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "BatchNorm", 
+      "name": "east0_batchnorm5", 
+      "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": [[504, 0, 0], [505, 0, 0], [506, 0, 0], [507, 0, 1], [508, 0, 1]]
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_convolution6_weight", 
+      "attrs": {
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
+        "kernel": "(3, 3)", 
+        "no_bias": "True", 
+        "num_filter": "32", 
+        "pad": "(1, 1)"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "Convolution", 
+      "name": "east0_convolution6", 
+      "attrs": {
+        "__init__": "<mxnet.initializer.Xavier object at 0x7f2260361ef0>", 
+        "kernel": "(3, 3)", 
+        "no_bias": "True", 
+        "num_filter": "32", 
+        "pad": "(1, 1)"
+      }, 
+      "inputs": [[509, 0, 0], [510, 0, 0]]
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm6_gamma", 
+      "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm6_beta", 
+      "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm6_moving_mean", 
+      "attrs": {
+        "__init__": "[\"zero\", {}]", 
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "null", 
+      "name": "east0_batchnorm6_moving_var", 
+      "attrs": {
+        "__init__": "[\"one\", {}]", 
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": []
+    }, 
+    {
+      "op": "BatchNorm", 
+      "name": "east0_batchnorm6", 
+      "attrs": {
+        "eps": "1e-05", 
+        "fix_gamma": "False", 
+        "momentum": "0.997", 
+        "use_global_stats": "False"
+      }, 
+      "inputs": [[511, 0, 0], [512, 0, 0], [513, 0, 0], [514, 0, 1], [515, 0, 1]]
     }, 
     {
       "op": "Cast", 
       "name": "east0_cast1", 
       "attrs": {"dtype": "float32"}, 
-      "inputs": [[482, 0, 0]]
+      "inputs": [[516, 0, 0]]
     }, 
     {
       "op": "null", 
@@ -5777,7 +6149,7 @@
       "attrs": {
         "__dtype__": "0", 
         "__lr_mult__": "1.0", 
-        "__shape__": "(1, 128, 1, 1)", 
+        "__shape__": "(1, 32, 1, 1)", 
         "__storage_type__": "0", 
         "__wd_mult__": "1.0"
       }, 
@@ -5809,13 +6181,13 @@
         "pad": "(0, 0)", 
         "stride": "(1, 1)"
       }, 
-      "inputs": [[483, 0, 0], [484, 0, 0], [485, 0, 0]]
+      "inputs": [[517, 0, 0], [518, 0, 0], [519, 0, 0]]
     }, 
     {
       "op": "Activation", 
       "name": "east0_conv0_sigmoid_fwd", 
       "attrs": {"act_type": "sigmoid"}, 
-      "inputs": [[486, 0, 0]]
+      "inputs": [[520, 0, 0]]
     }, 
     {
       "op": "null", 
@@ -5823,7 +6195,7 @@
       "attrs": {
         "__dtype__": "0", 
         "__lr_mult__": "1.0", 
-        "__shape__": "(4, 128, 1, 1)", 
+        "__shape__": "(4, 32, 1, 1)", 
         "__storage_type__": "0", 
         "__wd_mult__": "1.0"
       }, 
@@ -5855,19 +6227,19 @@
         "pad": "(0, 0)", 
         "stride": "(1, 1)"
       }, 
-      "inputs": [[483, 0, 0], [488, 0, 0], [489, 0, 0]]
+      "inputs": [[517, 0, 0], [522, 0, 0], [523, 0, 0]]
     }, 
     {
       "op": "Activation", 
       "name": "east0_conv1_sigmoid_fwd", 
       "attrs": {"act_type": "sigmoid"}, 
-      "inputs": [[490, 0, 0]]
+      "inputs": [[524, 0, 0]]
     }, 
     {
       "op": "_mul_scalar", 
       "name": "east0__mulscalar0", 
       "attrs": {"scalar": "512"}, 
-      "inputs": [[491, 0, 0]]
+      "inputs": [[525, 0, 0]]
     }, 
     {
       "op": "null", 
@@ -5875,7 +6247,7 @@
       "attrs": {
         "__dtype__": "0", 
         "__lr_mult__": "1.0", 
-        "__shape__": "(1, 128, 1, 1)", 
+        "__shape__": "(1, 32, 1, 1)", 
         "__storage_type__": "0", 
         "__wd_mult__": "1.0"
       }, 
@@ -5907,31 +6279,31 @@
         "pad": "(0, 0)", 
         "stride": "(1, 1)"
       }, 
-      "inputs": [[483, 0, 0], [493, 0, 0], [494, 0, 0]]
+      "inputs": [[517, 0, 0], [527, 0, 0], [528, 0, 0]]
     }, 
     {
       "op": "Activation", 
       "name": "east0_conv2_sigmoid_fwd", 
       "attrs": {"act_type": "sigmoid"}, 
-      "inputs": [[495, 0, 0]]
+      "inputs": [[529, 0, 0]]
     }, 
     {
       "op": "_minus_scalar", 
       "name": "east0__minusscalar0", 
       "attrs": {"scalar": "0.5"}, 
-      "inputs": [[496, 0, 0]]
+      "inputs": [[530, 0, 0]]
     }, 
     {
       "op": "_mul_scalar", 
       "name": "east0__mulscalar1", 
       "attrs": {"scalar": "3.141592653589793"}, 
-      "inputs": [[497, 0, 0]]
+      "inputs": [[531, 0, 0]]
     }, 
     {
       "op": "_div_scalar", 
       "name": "east0__divscalar0", 
       "attrs": {"scalar": "2.0"}, 
-      "inputs": [[498, 0, 0]]
+      "inputs": [[532, 0, 0]]
     }, 
     {
       "op": "Concat", 
@@ -5940,7 +6312,7 @@
         "dim": "1", 
         "num_args": "2"
       }, 
-      "inputs": [[492, 0, 0], [499, 0, 0]]
+      "inputs": [[526, 0, 0], [533, 0, 0]]
     }
   ], 
   "arg_nodes": [
@@ -6221,24 +6593,49 @@
     454, 
     455, 
     459, 
-    460, 
     462, 
     464, 
     465, 
-    468, 
-    470, 
+    466, 
+    467, 
+    469, 
     471, 
+    472, 
+    473, 
     474, 
     476, 
-    477, 
-    480, 
+    479, 
     481, 
+    482, 
+    483, 
     484, 
-    485, 
+    486, 
     488, 
     489, 
+    490, 
+    491, 
     493, 
-    494
+    496, 
+    498, 
+    499, 
+    500, 
+    501, 
+    503, 
+    505, 
+    506, 
+    507, 
+    508, 
+    510, 
+    512, 
+    513, 
+    514, 
+    515, 
+    518, 
+    519, 
+    522, 
+    523, 
+    527, 
+    528
   ], 
   "node_row_ptr": [
     0, 
@@ -6710,8 +7107,6 @@
     576, 
     577, 
     578, 
-    579, 
-    580, 
     581, 
     582, 
     583, 
@@ -6719,8 +7114,6 @@
     585, 
     586, 
     587, 
-    588, 
-    589, 
     590, 
     591, 
     592, 
@@ -6731,8 +7124,6 @@
     597, 
     598, 
     599, 
-    600, 
-    601, 
     602, 
     603, 
     604, 
@@ -6740,10 +7131,50 @@
     606, 
     607, 
     608, 
-    609, 
-    610, 
-    611
+    611, 
+    612, 
+    613, 
+    614, 
+    615, 
+    616, 
+    617, 
+    618, 
+    619, 
+    620, 
+    623, 
+    624, 
+    625, 
+    626, 
+    627, 
+    628, 
+    629, 
+    632, 
+    633, 
+    634, 
+    635, 
+    636, 
+    637, 
+    638, 
+    641, 
+    642, 
+    643, 
+    644, 
+    645, 
+    646, 
+    647, 
+    648, 
+    649, 
+    650, 
+    651, 
+    652, 
+    653, 
+    654, 
+    655, 
+    656, 
+    657, 
+    658, 
+    659
   ], 
-  "heads": [[487, 0, 0], [500, 0, 0]], 
+  "heads": [[521, 0, 0], [534, 0, 0]], 
   "attrs": {"mxnet_version": ["int", 10401]}
 }

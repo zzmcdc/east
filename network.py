@@ -5,6 +5,7 @@ from mxnet.gluon import nn
 import numpy as np
 from feature import FPNFeatureExpander
 from mxnet import autograd
+from mxboard import SummaryWriter
 
 
 class East(nn.HybridBlock):
@@ -12,7 +13,7 @@ class East(nn.HybridBlock):
   def __init__(self, base_model, outputs, text_scale=512, ctx=mx.cpu(), pretrained_base=True, **kwargs):
     super(East, self).__init__()
     self.text_scale = text_scale
-    weight_init = mx.init.Xavier(rnd_type='gaussian', factor_type='out', magnitude=2.)
+    weight_init = mx.init.Xavier(factor_type="in", magnitude=2.34)
     with self.name_scope():
       self.features = FPNFeatureExpander(network=base_model, outputs=outputs,pretrained=pretrained_base, ctx=ctx, **kwargs)
 
@@ -21,7 +22,9 @@ class East(nn.HybridBlock):
       self.theta_branch = nn.Conv2D(1, 1, activation='sigmoid')
 
   def hybrid_forward(self, F, x, **kwargs):
+    #x = F.Cast(x, dtype='float16')
     x = self.features(x)
+    #x = F.Cast(x, dtype='float32')
     score_map = self.score_branch(x)
     geo_map = self.geo_branch(x) * self.text_scale
 
@@ -33,7 +36,8 @@ class East(nn.HybridBlock):
 
 def get_east_resnet50(**kwargs):
   net = East(base_model='resnet50_v1d',
-             outputs=['layers1_relu8_fwd', 'layers2_relu11_fwd', 'layers3_relu17_fwd', 'layers4_relu8_fwd'], **kwargs)
+            outputs=['pool0_fwd','layers2_bottleneckv1b0__plus0','layers3_bottleneckv1b1__plus0' ,'layers4_relu8_fwd'], **kwargs) #layers4_bottleneckv1b2__plus0
+            #outputs=['layers1_relu8_fwd', 'layers2_relu11_fwd', 'layers3_relu17_fwd', 'layers4_relu8_fwd'], **kwargs)
 
   return net
 
@@ -65,5 +69,8 @@ if __name__ == '__main__':
   net = get_model('resnet50', pretrained_base=True)
   net.hybridize()
   net.initialize()
-  sym = mx.sym.Group(net(mx.sym.var('data')))
-  mx.viz.plot_network(symbol=sym,shape={'data':(1,3,512,512)}).view()
+  with autograd.train_mode():
+    x = mx.nd.array([np.random.normal(size=(3, 512, 512))])
+    net(mx.nd.random.uniform(low=0, high=1, shape=(1, 3, 512, 512)))
+    with SummaryWriter(logdir='./logs') as sw:
+      sw.add_graph(net)

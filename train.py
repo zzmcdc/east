@@ -88,8 +88,8 @@ def train(net, train_data, val_data, ctx, args):
     #trainer = gluon.Trainer(net.collect_params(), 'sgd',
     #                        {'wd': args['wd'], 'momentum': args['momentum'], 'lr_scheduler': lr_scheduler, 'multi_precision': True},
     #                        kvstore='local')
-    trainer = gluon.Trainer(net.collect_params(), 'adam', {
-                          'learning_rate': args['lr'], 'multi_precision': True})
+
+    trainer = gluon.Trainer(net.collect_params(), 'adam', {'learning_rate': args['lr'], 'multi_precision': True})
     east_loss = EastLoss()
     sum_losses = mx.metric.Loss('sum_loss')
     cls_losses = mx.metric.Loss('cls_loss')
@@ -228,10 +228,13 @@ if __name__ == '__main__':
             warnings.simplefilter("always")
             net.initialize()
             async_net.initialize()
+    #for item in net.features.collect_params().items():
+    #    if item[0].split('_')[-1] not in ['gamma', 'beta', 'mean', 'var']:
+    #        item[1].cast('float16')
 
-    for item in net.features.collect_params().items():
-        if 'mobilenet' in item[0].split('_')[1]:
-            item[1].lr_mult = 0.1
+    #for item in net.features.collect_params().items():
+    #    if 'mobilenet' in item[0].split('_')[1]:
+    #       item[1].lr_mult = 0.1
     train_loader = get_batch(
         num_workers=args['train_workers'], batch_size=args['batch_size'], data_flag='train', param=args)
     val_loader = get_batch(

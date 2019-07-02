@@ -110,9 +110,9 @@ class FPNFeatureExpander(SymbolBlock):
     def __init__(self, network, outputs,pretrained=True, ctx=mx.cpu(),
                  inputs=('data',)):
         inputs, f, params = _parse_network(network, outputs, inputs, pretrained, ctx)
-        self.bn_eps = 1e-5  
+        self.bn_eps = 1e-5
         self.bn_mom = 0.997
-        weight_init = mx.init.Xavier(rnd_type='gaussian', factor_type='out', magnitude=2.)
+        weight_init = mx.init.Xavier(rnd_type='gaussian', factor_type='in', magnitude=2.34)
 
         # e.g. For ResNet50, the feature is :
         # outputs = ['stage1_activation2', 'stage2_activation3',
@@ -131,14 +131,11 @@ class FPNFeatureExpander(SymbolBlock):
                 cur_data = mx.sym.Concat(*[g[i - 1], f[i]], dim=1)
                 c1_1 = mx.sym.Convolution(data=cur_data, num_filter=num_outputs[i], kernel=(1, 1), no_bias=True, attr={'__init__': weight_init})
                 c1_1 = mx.sym.BatchNorm(data=c1_1, fix_gamma=False, use_global_stats=False, eps=self.bn_eps,momentum=self.bn_mom)
-                
                 c1_1 = mx.sym.Convolution(data=c1_1, num_filter=num_outputs[i], kernel=(3, 3), pad=(1, 1), no_bias=True,attr={'__init__': weight_init}) 
                 h[i] = mx.sym.BatchNorm(data=c1_1, fix_gamma=False, use_global_stats=False, eps=self.bn_eps,momentum=self.bn_mom)
             if i <= 2:
-                g[i] = mx.sym.Deconvolution(data=h[i],kernel=(3,3),stride=(2,2),pad=(1,1),adj=(1,1),num_filter=umsample_size[i]) 
-   
+                g[i] = mx.sym.Deconvolution(data=h[i],kernel=(3,3),stride=(2,2),pad=(1,1),adj=(1,1),num_filter=umsample_size[i], attr={'__init__': weight_init}) 
             else:
                 g[i] = mx.sym.Convolution(data=h[i], num_filter=num_outputs[i], kernel=(3, 3), pad=(1, 1), no_bias=True, attr={'__init__': weight_init})
                 g[i] = mx.sym.BatchNorm(data=g[i], fix_gamma=False, use_global_stats=False, eps=self.bn_eps, momentum=self.bn_mom)
-            
         super(FPNFeatureExpander, self).__init__(g[3], inputs, params)

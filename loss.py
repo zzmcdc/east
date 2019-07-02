@@ -5,7 +5,7 @@ import ipdb
 
 class EastLoss(gluon.nn.Block):
 
-  def __init__(self, cls_weight= 0.1 , iou_weight=10, angle_weight=200, **kwargs):
+  def __init__(self, cls_weight= 1.0 , iou_weight=100, angle_weight=2000, **kwargs):
     super(EastLoss, self).__init__(**kwargs)
     self.cls_weight = cls_weight
     self.iou_weight = iou_weight

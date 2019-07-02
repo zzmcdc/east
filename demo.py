@@ -42,11 +42,11 @@ def load_image(img, data_shape):
 if __name__ == '__main__':
     args = parse_args()
     net = get_model(name=args.network, pretrained_base=False,
-                    text_scale=args.data_shape, use_upsample=False, use_deconv=True)
+                    text_scale=args.data_shape)
     net.initialize()
-    for item in net.features.collect_params().items():
-        if item[0].split('_')[-1] not in ['gamma', 'beta', 'mean', 'var']:
-            item[1].cast('float16')
+    #for item in net.features.collect_params().items():
+    #    if item[0].split('_')[-1] not in ['gamma', 'beta', 'mean', 'var']:
+    #        item[1].cast('float16')
     net.load_parameters(args.param_file)
     net.collect_params().reset_ctx(mx.gpu(0))
     net.hybridize()
